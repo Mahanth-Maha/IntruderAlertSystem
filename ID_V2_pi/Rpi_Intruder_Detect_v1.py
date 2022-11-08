@@ -1,16 +1,16 @@
-import datetime
 from gpiozero import MotionSensor
 from picamera import PiCamera
 import os
 import smtplib
+import datetime
+from time import sleep
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
-from time import sleep
 
 pinSense = 20
-PIR_Sensor = gpiozero.MotionSensor(pinSense)
-RPI_Camera = picamera.PiCamera()
+PIR_Sensor = MotionSensor(pinSense)
+RPI_Camera = PiCamera()
 
 No_of_Pictures = 4
 
