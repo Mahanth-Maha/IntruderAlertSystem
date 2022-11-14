@@ -11,11 +11,12 @@ emailMsg = 'Hello\nTest 101 - Sending Email\n\nThank you\n'
 mimeMessage = MIMEMultipart()
 mimeMessage['to'] ='pics.general.backup.maha@gmail.com '
 mimeMessage['subject'] = "Hi Maha's RasberryPi Here"
+# text = MIMEText(emailMsg)
+# mimeMessage.attach(text)
+mimeMessage.attach(MIMEText(emailMsg, 'plain'))
+raw_string = base64.urlsafe_b64encode(mimeMessage.as_bytes()).decode()
 
-mimeMessage. attach (MIMEText(emailMsg, 'plain' ) )
-raw_string = base64.urlsafe_b64decode(mimeMessage.as_bytes()).decode()
 message = service.users().messages().send(userId='me', body={'raw': raw_string}).execute()
 print(message)
-
 
 # pip install -upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
