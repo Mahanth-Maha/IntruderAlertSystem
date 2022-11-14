@@ -7,9 +7,9 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 
 # Changed this code for secuirty purposes
-Pi_MAddr = 'PiMail@gmail.com'
-Pi_MPswd = 'Pswd'
-Client_Maddr = 'client@gmail.com'
+Pi_MAddr = 'rasberrypi.jntua@gmail.com'
+Pi_MPswd = 'JNTUA@500'
+Client_Maddr = 'pics.general.backup.maha@gmail.com'
 
 
 def SendMail():
