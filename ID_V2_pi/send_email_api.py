@@ -14,7 +14,7 @@ mimeMessage['subject'] = "Hi Maha's RasberryPi Here"
 
 mimeMessage. attach (MIMEText(emailMsg, 'plain' ) )
 raw_string = base64.urlsafe_b64decode(mimeMessage.as_bytes().decode())
-message = service.users().messages().send(userId='me',body={'raw':raw_string}).execute()
+message = service.users().messages().send(userId='me', body={'raw': raw_string}).execute()
 print(message)
 
 
