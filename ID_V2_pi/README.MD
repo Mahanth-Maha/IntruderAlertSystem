@@ -12,7 +12,7 @@ Consecutive images of intruder via email (Gmail)
 * RPI Camera
 * PIR Sensor
 
-For Debugging
+### For Debugging
 
 * Bulb x 2
 * Jumper Wires x 8
