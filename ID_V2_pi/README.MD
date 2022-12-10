@@ -1,7 +1,8 @@
-# Inruder Detection using Raserry Pi
+# Intruder Detection using Raserry Pi
+
 Consecutive images of intruder via email (Gmail)
 
-# Required Hardware : Testing
+## Required Hardware : Testing
 
 * Rasberry Pi Board (RPI_B)
 * If no Wifi in RPI_B : LAN CABLE
@@ -11,8 +12,9 @@ Consecutive images of intruder via email (Gmail)
 * RPI Camera
 * PIR Sensor
 
-For Deugging
+For Debugging
+
 * Bulb x 2
 * Jumper Wires x 8
-*  Resistors > 500 Ohm x 2
+* Resistors > 500 Ohm x 2
 * Gmail Account for RPI_B

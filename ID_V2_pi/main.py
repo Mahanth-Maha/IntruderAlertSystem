@@ -1,6 +1,6 @@
 from Google import Create_Service
 import base64
-# from gpiozero import MotionSensor
+from gpiozero import MotionSensor
 from picamera import PiCamera
 import os
 import smtplib
@@ -11,6 +11,8 @@ from email.mime.image import MIMEImage
 from email.mime. multipart import MIMEMultipart
 
 RPI_Camera = PiCamera()
+pinSense = 21
+PIR_Sensor = MotionSensor(pinSense)
 
 No_of_Pictures = 4
 
