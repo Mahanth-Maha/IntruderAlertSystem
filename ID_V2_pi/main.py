@@ -21,12 +21,8 @@ Options:
   -v --verbose  Enable verbose mode.
 """
 
-from email_validator import validate_email, EmailNotValidError
-from docopt import docopt
 from Google import Create_Service
 import base64
-from gpiozero import MotionSensor
-from picamera import PiCamera
 import os
 import smtplib
 from subprocess import call
@@ -37,6 +33,10 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 
+from gpiozero import MotionSensor
+from picamera import PiCamera
+from docopt import docopt
+from email_validator import validate_email, EmailNotValidError
 # pip install -upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
 
 RPI_Camera = PiCamera()
@@ -82,17 +82,9 @@ def SendMail_video(Captured):
     fp = open(Captured, 'rb')
     att = MIMEApplication(fp.read(), _subtype=".mp4")
     fp.close()
-    att.add_header('Content-Disposition', 'attachment', filename='video' +
-                   datetime.datetime.now().strftime('%Y-%m-%d%H:%M:%S') + '.mp4')
+    att.add_header('Content-Disposition', 'attachment', filename=Captured)
     mimeMessage.attach(att)
     print("attach successful")
-
-    # removing .h264 & .mp4 extra files
-    os.remove("/home/pi/Desktop/alert_video.h264")
-
-    # renaming file
-    os.rename('alert_video.mp4', datetime.datetime.now().strftime(
-        '%Y-%m-%d%H:%M:%S') + '.mp4')
 
     raw_string = base64.urlsafe_b64encode(mimeMessage.as_bytes()).decode()
     message = service.users().messages().send(
@@ -137,16 +129,16 @@ def CaptureVid():
         RPI_Camera.start_recording(Captured)
         RPI_Camera.wait_recording(50)
         RPI_Camera.stop_recording()
-
         # coverting video from .h264 to .mp4
         command = f"MP4Box -add {file_name}.h264 {file_name}.mp4"
         call([command], shell=True)
         print("video converted")
 
         print("Sending Mail...", end=' ')
-        SendMail_video(Captured)
+        SendMail_video(file_name+'.mp4')
         print("Affrimative !")
-
+        os.remove(Captured)
+        
         # Not to capture immediately
         sleep(GAP_TIME)
 
@@ -154,11 +146,13 @@ def CaptureVid():
 def CaptureImg_main():
     while True:
         CaptureImg()
+        sleep(30)
 
 
 def CaptureVid_main():
     while True:
         CaptureVid()
+        sleep(30)
 
 
 def main(verbose, mode, mode_id):
