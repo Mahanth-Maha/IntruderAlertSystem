@@ -38,10 +38,16 @@ from picamera import PiCamera
 from docopt import docopt
 from email_validator import validate_email, EmailNotValidError
 # pip install -upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(18, GPIO.IN)
+# Set up the LED
+GPIO.setup(24, GPIO.OUT)
 
 RPI_Camera = PiCamera()
-pinSense = 21
-PIR_Sensor = MotionSensor(pinSense)
+# pinSense = 21
+# pinSense = 18
+# PIR_Sensor = MotionSensor(pinSense)
 
 No_of_Pictures = 4
 
@@ -93,55 +99,79 @@ def SendMail_video(Captured):
 
 
 def CaptureImg():
-    if PIR_Sensor.motion_detected:
-        print("Movement Detected ! Clicking a Pictures...")
-        tm = datetime.datetime.now().strftime('%Y-%m-%d%H:%M:%S')
-        images = []
-        taken = 0
-        for taken in range(No_of_Pictures):
-            print("Picture "+str(taken) + "... And Smile...", end=' ')
-            RPI_Camera.resolution = (1024, 768)
-            store_at = './out_img/image_' + str(tm) + str(taken) + '.jpg'
-            images.append(store_at)
-            RPI_Camera.capture(store_at)
-            if (taken != No_of_Pictures):
-                print("nice one ! One More...Stay Still")
-                sleep(No_of_Pictures/2)
-            else:
-                print("Great Pictures...!")
-        print("Sending Mail...", end=' ')
-        SendMail_Img(images)
-        print("Affrimative !")
+    try:
+        # if PIR_Sensor.motion_detected:
+        if GPIO.input(18):
+            GPIO.output(24, GPIO.HIGH)
+            print("Motion detected!")
+            sleep(1)
+            print("Movement Detected ! Clicking a Pictures...")
+            tm = datetime.datetime.now().strftime('%Y-%m-%d%H:%M:%S')
+            images = []
+            taken = 0
+            for taken in range(No_of_Pictures):
+                print("Picture "+str(taken) + "... And Smile...", end=' ')
+                RPI_Camera.resolution = (1024, 768)
+                store_at = './out_img/image_' + str(tm) + str(taken) + '.jpg'
+                images.append(store_at)
+                RPI_Camera.capture(store_at)
+                if (taken != No_of_Pictures):
+                    print("nice one ! One More...Stay Still")
+                    sleep(No_of_Pictures/2)
+                else:
+                    print("Great Pictures...!")
+            print("Sending Mail...", end=' ')
+            SendMail_Img(images)
+            print("Affrimative !")
 
-        # Not to capture immediately
-        sleep(GAP_TIME)
+            # Not to capture immediately
+            sleep(GAP_TIME)
+        else:
+            # Turn off the LED
+            GPIO.output(24, GPIO.LOW)
+            sleep(0.1)
+    except KeyboardInterrupt:
+        # Clean up the GPIO pins before exiting
+        GPIO.cleanup()
+
 
 
 def CaptureVid():
-    if PIR_Sensor.motion_detected:
-        print("Movement Detected ! RECORDING Video...")
-        tm = datetime.datetime.now().strftime('%Y-%m-%d%H:%M:%S')
-        # Video record
-        RPI_Camera.resolution = (640, 480)
-        RPI_Camera.rotation = 180
-        Captured = './out_img/video_' + str(tm) + '.h264'
-        file_name = './out_img/video_' + str(tm)
-        RPI_Camera.start_recording(Captured)
-        RPI_Camera.wait_recording(50)
-        RPI_Camera.stop_recording()
-        # coverting video from .h264 to .mp4
-        command = f"MP4Box -add {file_name}.h264 {file_name}.mp4"
-        call([command], shell=True)
-        print("video converted")
+    try:
+        # if PIR_Sensor.motion_detected:
+        if GPIO.input(18):
+            GPIO.output(24, GPIO.HIGH)
+            print("Motion detected!")
+            sleep(1)
+            print("Movement Detected ! RECORDING Video...")
+            tm = datetime.datetime.now().strftime('%Y-%m-%d%H:%M:%S')
+            # Video record
+            RPI_Camera.resolution = (640, 480)
+            RPI_Camera.rotation = 180
+            Captured = './out_img/video_' + str(tm) + '.h264'
+            file_name = './out_img/video_' + str(tm)
+            RPI_Camera.start_recording(Captured)
+            RPI_Camera.wait_recording(50)
+            RPI_Camera.stop_recording()
+            # coverting video from .h264 to .mp4
+            command = f"MP4Box -add {file_name}.h264 {file_name}.mp4"
+            call([command], shell=True)
+            print("video converted")
 
-        print("Sending Mail...", end=' ')
-        SendMail_video(file_name+'.mp4')
-        print("Affrimative !")
-        os.remove(Captured)
-        
-        # Not to capture immediately
-        sleep(GAP_TIME)
-
+            print("Sending Mail...", end=' ')
+            SendMail_video(file_name+'.mp4')
+            print("Affrimative !")
+            os.remove(Captured)
+            
+            # Not to capture immediately
+            sleep(GAP_TIME)
+        else:
+            # Turn off the LED
+            GPIO.output(24, GPIO.LOW)
+            sleep(0.1)
+    except KeyboardInterrupt:
+        # Clean up the GPIO pins before exiting
+        GPIO.cleanup()
 
 def CaptureImg_main():
     while True:
@@ -164,7 +194,7 @@ def main(verbose, mode, mode_id):
             # CaptureImg_main()
         elif mode_id == 'video':
             print('vid mode')
-            # CaptureVid_main()
+            # CaptureVido/main()
 
 
 def email_validate_with_err(mail_id):
