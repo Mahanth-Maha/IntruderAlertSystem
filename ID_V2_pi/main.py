@@ -191,10 +191,10 @@ def main(verbose, mode, mode_id):
     if mode:
         if mode_id == 'image':
             print('img mode')
-            # CaptureImg_main()
+            CaptureImg_main()
         elif mode_id == 'video':
             print('vid mode')
-            # CaptureVido/main()
+            CaptureVid_main()
 
 
 def email_validate_with_err(mail_id):
