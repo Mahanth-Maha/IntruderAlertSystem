@@ -26,6 +26,7 @@ import base64
 import os
 import smtplib
 from subprocess import call
+import subprocess
 import datetime
 from time import sleep
 from email.mime.text import MIMEText
@@ -125,6 +126,7 @@ def CaptureImg():
             print("Affrimative !")
 
             # Not to capture immediately
+            GPIO.output(24, GPIO.LOW)
             sleep(GAP_TIME)
         else:
             # Turn off the LED
@@ -149,13 +151,15 @@ def CaptureVid():
             RPI_Camera.resolution = (640, 480)
             RPI_Camera.rotation = 180
             Captured = './out_img/video_' + str(tm) + '.h264'
+            mp4_file = './out_img/video_' + str(tm) + '.mp4'
             file_name = './out_img/video_' + str(tm)
             RPI_Camera.start_recording(Captured)
             RPI_Camera.wait_recording(50)
             RPI_Camera.stop_recording()
             # coverting video from .h264 to .mp4
-            command = f"MP4Box -add {file_name}.h264 {file_name}.mp4"
-            call([command], shell=True)
+            # command = f"MP4Box -add {file_name}.h264 {file_name}.mp4"
+            # call([command], shell=True)
+            subprocess.run(['ffmpeg', '-i', Captured, '-c:v', 'copy', '-c:a', 'copy', mp4_file])
             print("video converted")
 
             print("Sending Mail...", end=' ')
@@ -164,6 +168,7 @@ def CaptureVid():
             os.remove(Captured)
             
             # Not to capture immediately
+            GPIO.output(24, GPIO.LOW)
             sleep(GAP_TIME)
         else:
             # Turn off the LED
@@ -182,6 +187,7 @@ def CaptureImg_main():
 
 def CaptureVid_main():
     while True:
+        print("Running capture")
         CaptureVid()
         sleep(30)
 
@@ -231,3 +237,4 @@ if __name__ == '__main__':
     if mode and mode_id in ('image', 'video') and email_validate_with_err(CLIENT_EMAIL_ID):
         print(type(GAP_TIME),GAP_TIME)
         main(verbose, mode, mode_id)
+#cd Documents/
