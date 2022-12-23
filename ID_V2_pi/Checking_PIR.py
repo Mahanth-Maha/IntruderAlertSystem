@@ -15,11 +15,11 @@ try:
             # Turn on the LED
             GPIO.output(24, GPIO.HIGH)
             print("Motion detected!")
-            # time.sleep(1)
+            time.sleep(1)
         else:
             # Turn off the LED
             GPIO.output(24, GPIO.LOW)
-            # time.sleep(0.1)
+            time.sleep(0.1)
 
 except KeyboardInterrupt:
     # Clean up the GPIO pins before exiting
