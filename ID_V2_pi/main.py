@@ -154,7 +154,7 @@ def CaptureVid():
             mp4_file = './out_img/video_' + str(tm) + '.mp4'
             file_name = './out_img/video_' + str(tm)
             RPI_Camera.start_recording(Captured)
-            RPI_Camera.wait_recording(50)
+            RPI_Camera.wait_recording(30)
             RPI_Camera.stop_recording()
             # coverting video from .h264 to .mp4
             # command = f"MP4Box -add {file_name}.h264 {file_name}.mp4"
@@ -237,4 +237,3 @@ if __name__ == '__main__':
     if mode and mode_id in ('image', 'video') and email_validate_with_err(CLIENT_EMAIL_ID):
         print(type(GAP_TIME),GAP_TIME)
         main(verbose, mode, mode_id)
-#cd Documents/
