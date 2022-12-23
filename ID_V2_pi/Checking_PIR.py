@@ -15,7 +15,7 @@ try:
             # Turn on the LED
             GPIO.output(24, GPIO.HIGH)
             print("Motion detected!")
-            time.sleep(0.1)
+            time.sleep(1)
         else:
             # Turn off the LED
             GPIO.output(24, GPIO.LOW)
