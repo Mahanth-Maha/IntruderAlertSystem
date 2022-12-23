@@ -175,8 +175,9 @@ def CaptureVid():
 
 def CaptureImg_main():
     while True:
+        print("Running capture")
         CaptureImg()
-        sleep(30)
+        sleep(1)
 
 
 def CaptureVid_main():
@@ -228,5 +229,5 @@ if __name__ == '__main__':
     print(args)
     # Call the main function
     if mode and mode_id in ('image', 'video') and email_validate_with_err(CLIENT_EMAIL_ID):
-        print(type(GAP_TIME))
+        print(type(GAP_TIME),GAP_TIME)
         main(verbose, mode, mode_id)
